@@ -1,0 +1,57 @@
+require 'spec_helper'
+
+describe 'acts_as_removable' do
+  class MyModel < ActiveRecord::Base
+    acts_as_removable
+    attr_accessor :callback_before, :callback_after
+    before_remove do |r|
+      r.callback_before = true
+    end
+    after_remove do |r|
+      r.callback_after = true
+    end
+  end
+
+  class MySecondModel < ActiveRecord::Base
+    acts_as_removable column_name: :use_this_column
+  end
+
+  before do
+    # setup database
+    db_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp', 'acts_as_removable.db'))
+    Dir::mkdir(File.dirname(db_file)) unless File.exists?(File.dirname(db_file))
+    ActiveRecord::Base.establish_connection(
+      :adapter => "sqlite3",
+      :database => "#{File.expand_path(File.join(File.dirname(__FILE__), '..'))}/tmp/acts_as_removable.db"
+    )
+    ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS 'my_models'")
+    ActiveRecord::Base.connection.create_table(:my_models) do |t|
+      t.timestamp :removed_at
+    end
+    ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS 'my_second_models'")
+    ActiveRecord::Base.connection.create_table(:my_second_models) do |t|
+      t.string :name
+      t.timestamp :use_this_column
+    end
+  end
+
+  it "test column and check method" do
+    [[MyModel.create!, :removed_at], [MySecondModel.create!, :use_this_column]].each do |r, column_name|
+      r.removed?.should be_false
+      r.send(column_name).should be_nil
+
+      r.remove
+      r.removed?.should be_true
+      r.send(column_name).should be_a(Time)
+    end
+  end
+
+  it "test callbacks" do
+    r = MyModel.create!
+    r.callback_before.should be_false
+    r.callback_after.should be_false
+    r.remove
+    r.callback_before.should be_true
+    r.callback_after.should be_true
+  end
+end
