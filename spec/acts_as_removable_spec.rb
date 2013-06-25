@@ -13,7 +13,7 @@ describe 'acts_as_removable' do
   end
 
   class MySecondModel < ActiveRecord::Base
-    acts_as_removable column_name: :use_this_column
+    acts_as_removable column_name: :use_this_column, without_default_scope: true
   end
 
   before do
@@ -44,6 +44,26 @@ describe 'acts_as_removable' do
       r.removed?.should be_true
       r.send(column_name).should be_a(Time)
     end
+  end
+
+  it "test scopes" do
+    MyModel.delete_all
+    MySecondModel.delete_all
+
+    MyModel.create!
+    MyModel.create!.remove!
+    MySecondModel.create!
+    MySecondModel.create!.remove!
+
+    MyModel.count.to_i.should be(1)
+    MyModel.actives.count.should be(1)
+    MyModel.removed.count.should be(1)
+    MyModel.unscoped.count.should be(2)
+
+    MySecondModel.count.to_i.should be(2)
+    MySecondModel.actives.count.should be(1)
+    MySecondModel.removed.count.should be(1)
+    MySecondModel.unscoped.count.should be(2)
   end
 
   it "test callbacks" do

@@ -1,4 +1,4 @@
-# ActsAsRemovable
+# acts_as_removable
 
 This gem allows you to easily manage ActiveRecord objects that are pseudo destroyed a.k.a. removed.
 
@@ -42,7 +42,7 @@ And you can use callbacks:
 class MyModel < ActiveRecord::Base
   acts_as_removable
 
-  before_save do |r|
+  before_remove do |r|
     puts "Before removing record"
   end
 
