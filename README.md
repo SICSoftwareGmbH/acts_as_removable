@@ -37,6 +37,13 @@ class MyModel < ActiveRecord::Base
 end
 ```
 
+It's possible to skip the default_scope:
+```ruby
+class MyModel < ActiveRecord::Base
+  acts_as_removable without_default_scope: true
+end
+```
+
 And you can use callbacks:
 ```ruby
 class MyModel < ActiveRecord::Base
@@ -57,6 +64,7 @@ end
 
 * [![Build Status](https://api.travis-ci.org/SICSoftwareGmbH/acts_as_removable.png)](https://travis-ci.org/SICSoftwareGmbH/acts_as_removable)
 * [![Dependencies](https://gemnasium.com/SICSoftwareGmbH/acts_as_removable.png?travis)](https://gemnasium.com/SICSoftwareGmbH/acts_as_removable)
+* [![Code Climate](https://codeclimate.com/github/SICSoftwareGmbH/acts_as_removable.png)](https://codeclimate.com/github/SICSoftwareGmbH/acts_as_removable)
 
 ## Contributing
 
