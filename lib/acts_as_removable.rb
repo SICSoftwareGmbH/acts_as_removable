@@ -32,7 +32,7 @@ module ActsAsRemovable
         scope :actives, -> {unscoped.where("#{self.table_name}.#{self._acts_as_removable_column_name} IS NULL")}
         default_scope -> {actives} unless options[:without_default_scope]
 
-        define_callbacks :remove
+        define_callbacks :remove, :unremove
 
         def self.before_remove(*args, &block)
           set_callback :remove, :before, *args, &block
@@ -42,30 +42,38 @@ module ActsAsRemovable
           set_callback :remove, :after, *args, &block
         end
 
+        def self.before_unremove(*args, &block)
+          set_callback :unremove, :before, *args, &block
+        end
+
+        def self.after_unremove(*args, &block)
+          set_callback :unremove, :after, *args, &block
+        end
+
         def removed?
           self.send(self.class._acts_as_removable_column_name).present?
         end
 
         def remove(options={})
-          _update_remove_attribute(Time.now, false, options)
+          _update_remove_attribute(:remove, Time.now, false, options)
         end
 
         def remove!(options={})
-          _update_remove_attribute(Time.now, true, options)
+          _update_remove_attribute(:remove, Time.now, true, options)
         end
 
         def unremove(options={})
-          _update_remove_attribute(nil, false, options)
+          _update_remove_attribute(:unremove, nil, false, options)
         end
 
         def unremove!(options={})
-          _update_remove_attribute(nil, true, options)
+          _update_remove_attribute(:unremove, nil, true, options)
         end
 
         private
 
-        def _update_remove_attribute(value, with_bang=false, options={})
-          run_callbacks :remove do
+        def _update_remove_attribute(callback, value, with_bang=false, options={})
+          run_callbacks callback.to_sym do
             self.send("#{self.class._acts_as_removable_column_name}=", value)
             with_bang ? self.save!(options) : self.save(options)
           end

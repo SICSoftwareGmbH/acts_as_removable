@@ -19,7 +19,7 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-# a column removed_at of type timestamp is required 
+# a column removed_at of type timestamp is required
 class MyModel < ActiveRecord::Base
   acts_as_removable
 end
@@ -56,6 +56,15 @@ class MyModel < ActiveRecord::Base
   after_remove :after_remove_method
   def after_remove_method
     puts "After removing record"
+  end
+
+  before_unremove do |r|
+    puts "Before unremoving record"
+  end
+
+  after_unremove :after_unremove_method
+  def after_unremove_method
+    puts "After unremoving record"
   end
 end
 ```

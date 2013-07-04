@@ -3,12 +3,19 @@ require 'spec_helper'
 describe 'acts_as_removable' do
   class MyModel < ActiveRecord::Base
     acts_as_removable
-    attr_accessor :callback_before, :callback_after
+    attr_accessor :callback_before_remove, :callback_after_remove, :callback_before_unremove, :callback_after_unremove
     before_remove do |r|
-      r.callback_before = true
+      r.callback_before_remove = true
     end
     after_remove do |r|
-      r.callback_after = true
+      r.callback_after_remove = true
+    end
+
+    before_unremove do |ur|
+      ur.callback_before_unremove = true
+    end
+    after_unremove do |ur|
+      ur.callback_after_unremove = true
     end
   end
 
@@ -68,10 +75,24 @@ describe 'acts_as_removable' do
 
   it "test callbacks" do
     r = MyModel.create!
-    r.callback_before.should be_false
-    r.callback_after.should be_false
+    r.callback_before_remove.should be_false
+    r.callback_after_remove.should be_false
+    r.callback_before_unremove.should be_false
+    r.callback_after_unremove.should be_false
+
     r.remove
-    r.callback_before.should be_true
-    r.callback_after.should be_true
+
+    r.callback_before_remove.should be_true
+    r.callback_after_remove.should be_true
+    r.callback_before_unremove.should be_false
+    r.callback_after_unremove.should be_false
+
+    r.unremove
+
+    r.callback_before_remove.should be_true
+    r.callback_after_remove.should be_true
+    r.callback_before_unremove.should be_true
+    r.callback_after_unremove.should be_true
+
   end
 end
