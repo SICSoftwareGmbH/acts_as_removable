@@ -6,7 +6,7 @@ require 'acts_as_removable/version'
 Gem::Specification.new do |spec|
   spec.name          = "acts_as_removable"
   spec.version       = ActsAsRemovable::VERSION
-  spec.authors       = ["Florian Schwab"]
+  spec.authors       = ["Florian Schwab", "Erik Ernst"]
   spec.email         = ["florian.schwab@sic-software.com"]
   spec.description   = %q{Simplifies handling of pseudo removed records}
   spec.summary       = %q{Simplifies handling of pseudo removed records}
