@@ -28,11 +28,21 @@ module ActsAsRemovable
           @_acts_as_removable_column_name
         end
 
-        scope :removed, -> {unscoped.where("#{self.table_name}.#{self._acts_as_removable_column_name} IS NOT NULL")}
-        scope :actives, -> {unscoped.where("#{self.table_name}.#{self._acts_as_removable_column_name} IS NULL")}
-        default_scope -> {actives} unless options[:without_default_scope]
+        scope :removed, -> {
+          s = where(all.table[self._acts_as_removable_column_name].not_eq(nil).to_sql).with_default_scope
+          s.where_values.delete(all.table[self._acts_as_removable_column_name].eq(nil).to_sql)
+          s
+        }
 
-        define_callbacks :remove, :unremove
+        scope :actives, -> {
+          s = where(all.table[self._acts_as_removable_column_name].eq(nil).to_sql).with_default_scope
+          s.where_values.delete(all.table[self._acts_as_removable_column_name].not_eq(nil).to_sql)
+          s
+        }
+
+        default_scope -> {where(all.table[self._acts_as_removable_column_name].eq(nil).to_sql)} unless options[:without_default_scope]
+
+        define_model_callbacks :remove, :unremove
 
         def self.before_remove(*args, &block)
           set_callback :remove, :before, *args, &block
