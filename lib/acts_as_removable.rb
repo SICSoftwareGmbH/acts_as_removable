@@ -29,15 +29,15 @@ module ActsAsRemovable
         end
 
         scope :removed, -> {
-          s = where(all.table[self._acts_as_removable_column_name].not_eq(nil).to_sql).with_default_scope
-          s.where_values.delete(all.table[self._acts_as_removable_column_name].eq(nil).to_sql)
-          s
+          removed_at_column_name = self._acts_as_removable_column_name
+          query = where(all.table[removed_at_column_name].not_eq(nil).to_sql)
+          ::ActsAsRemovable.removable_where_values(query, removed_at_column_name, all.table[removed_at_column_name].eq(nil).to_sql)
         }
 
         scope :actives, -> {
-          s = where(all.table[self._acts_as_removable_column_name].eq(nil).to_sql).with_default_scope
-          s.where_values.delete(all.table[self._acts_as_removable_column_name].not_eq(nil).to_sql)
-          s
+          removed_at_column_name = self._acts_as_removable_column_name
+          query = where(all.table[removed_at_column_name].eq(nil).to_sql)
+          ::ActsAsRemovable.removable_where_values(query, removed_at_column_name, all.table[removed_at_column_name].not_eq(nil).to_sql)
         }
 
         default_scope -> {where(all.table[self._acts_as_removable_column_name].eq(nil).to_sql)} unless options[:without_default_scope]
@@ -92,6 +92,12 @@ module ActsAsRemovable
     end
   end
 
+  # Helps deleting where statements from query
+  def self.removable_where_values(query, column_name, remove_where)
+    query = query.with_default_scope if query.respond_to?(:with_default_scope)
+    query.where_values.delete(remove_where)
+    query
+  end
 end
 
 ActiveRecord::Base.send(:include, ActsAsRemovable)
