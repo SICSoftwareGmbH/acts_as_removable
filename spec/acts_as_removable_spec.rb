@@ -44,12 +44,12 @@ describe 'acts_as_removable' do
 
   it 'test column and check method' do
     [[MyModel.create!, :removed_at], [MySecondModel.create!, :use_this_column]].each do |r, column_name|
-      r.removed?.should be_false
-      r.send(column_name).should be_nil
+      expect(r.removed?).to be(false)
+      expect(r.send(column_name)).to be(nil)
 
       r.remove
-      r.removed?.should be_true
-      r.send(column_name).should be_a(Time)
+      expect(r.removed?).to be(true)
+      expect(r.send(column_name)).to be_kind_of(Time)
     end
   end
 
@@ -62,36 +62,36 @@ describe 'acts_as_removable' do
     MySecondModel.create!
     MySecondModel.create!.remove!
 
-    MyModel.count.to_i.should be(1)
-    MyModel.actives.count.should be(1)
-    MyModel.removed.count.should be(1)
-    MyModel.unscoped.count.should be(2)
+    expect(MyModel.count).to be(1)
+    expect(MyModel.actives.count).to be(1)
+    expect(MyModel.removed.count).to be(1)
+    expect(MyModel.unscoped.count).to be(2)
 
-    MySecondModel.count.to_i.should be(2)
-    MySecondModel.actives.count.should be(1)
-    MySecondModel.removed.count.should be(1)
-    MySecondModel.unscoped.count.should be(2)
+    expect(MySecondModel.count).to be(2)
+    expect(MySecondModel.actives.count).to be(1)
+    expect(MySecondModel.removed.count).to be(1)
+    expect(MySecondModel.unscoped.count).to be(2)
   end
 
   it 'test callbacks' do
     r = MyModel.create!
-    r.callback_before_remove.should be_false
-    r.callback_after_remove.should be_false
-    r.callback_before_unremove.should be_false
-    r.callback_after_unremove.should be_false
+    expect(r.callback_before_remove).to be(nil)
+    expect(r.callback_after_remove).to be(nil)
+    expect(r.callback_before_unremove).to be(nil)
+    expect(r.callback_after_unremove).to be(nil)
 
     r.remove
 
-    r.callback_before_remove.should be_true
-    r.callback_after_remove.should be_true
-    r.callback_before_unremove.should be_false
-    r.callback_after_unremove.should be_false
+    expect(r.callback_before_remove).to be(true)
+    expect(r.callback_after_remove).to be(true)
+    expect(r.callback_before_unremove).to be(nil)
+    expect(r.callback_after_unremove).to be(nil)
 
     r.unremove
 
-    r.callback_before_remove.should be_true
-    r.callback_after_remove.should be_true
-    r.callback_before_unremove.should be_true
-    r.callback_after_unremove.should be_true
+    expect(r.callback_before_remove).to be(true)
+    expect(r.callback_after_remove).to be(true)
+    expect(r.callback_before_unremove).to be(true)
+    expect(r.callback_after_unremove).to be(true)
   end
 end
