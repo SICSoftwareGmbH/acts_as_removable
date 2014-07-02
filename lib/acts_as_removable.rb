@@ -5,12 +5,7 @@ require "acts_as_removable/version"
 module ActsAsRemovable
   extend ActiveSupport::Concern
 
-  included do
-    extend(ClassMethods)
-  end
-
   module ClassMethods
-
     # Add ability to remove ActiveRecord instances
     #
     #   acts_as_removable
@@ -21,29 +16,26 @@ module ActsAsRemovable
     #
     # * <tt>:column_name</tt> - A symbol or string with the column to use for removal timestamp.
     # * <tt>:without_default_scope</tt> - A boolean indicating to not set a default scope.
-    def acts_as_removable(options={})
-      self.class_eval do
-        @_acts_as_removable_column_name = (options[:column_name] || 'removed_at').to_s
-        def self._acts_as_removable_column_name
-          @_acts_as_removable_column_name
-        end
+    def acts_as_removable(options = {})
+      _acts_as_removable_options.merge!(options)
 
-        scope :removed, -> {
-          removed_at_column_name = self._acts_as_removable_column_name
-          query = where(all.table[removed_at_column_name].not_eq(nil).to_sql)
-          ::ActsAsRemovable.removable_where_values(query, removed_at_column_name, all.table[removed_at_column_name].eq(nil).to_sql)
-        }
+      scope :removed, -> {
+        removed_at_column_name = _acts_as_removable_options[:column_name]
+        query = where(all.table[removed_at_column_name].not_eq(nil).to_sql)
+        _removable_where_values(query, removed_at_column_name, all.table[removed_at_column_name].eq(nil).to_sql)
+      }
 
-        scope :actives, -> {
-          removed_at_column_name = self._acts_as_removable_column_name
-          query = where(all.table[removed_at_column_name].eq(nil).to_sql)
-          ::ActsAsRemovable.removable_where_values(query, removed_at_column_name, all.table[removed_at_column_name].not_eq(nil).to_sql)
-        }
+      scope :actives, -> {
+        removed_at_column_name = _acts_as_removable_options[:column_name]
+        query = where(all.table[removed_at_column_name].eq(nil).to_sql)
+        _removable_where_values(query, removed_at_column_name, all.table[removed_at_column_name].not_eq(nil).to_sql)
+      }
 
-        default_scope -> {where(all.table[self._acts_as_removable_column_name].eq(nil).to_sql)} unless options[:without_default_scope]
+      default_scope -> {where(all.table[_acts_as_removable_options[:column_name]].eq(nil).to_sql)} unless _acts_as_removable_options[:without_default_scope]
 
-        define_model_callbacks :remove, :unremove
+      define_model_callbacks :remove, :unremove
 
+      class_eval do
         def self.before_remove(*args, &block)
           set_callback :remove, :before, *args, &block
         end
@@ -61,7 +53,7 @@ module ActsAsRemovable
         end
 
         def removed?
-          self.send(self.class._acts_as_removable_column_name).present?
+          send(self.class._acts_as_removable_options[:column_name]).present?
         end
 
         def remove(options={})
@@ -80,23 +72,27 @@ module ActsAsRemovable
           _update_remove_attribute(:unremove, nil, true, options)
         end
 
-        private
-
         def _update_remove_attribute(callback, value, with_bang=false, options={})
           run_callbacks callback.to_sym do
-            self.send("#{self.class._acts_as_removable_column_name}=", value)
-            with_bang ? self.save!(options) : self.save(options)
+            send("#{self.class._acts_as_removable_options[:column_name]}=", value)
+            with_bang ? save!(options) : save(options)
           end
         end
       end
     end
-  end
 
-  # Helps deleting where statements from query
-  def self.removable_where_values(query, column_name, remove_where)
-    query = query.with_default_scope if query.respond_to?(:with_default_scope)
-    query.where_values.delete(remove_where)
-    query
+    def _acts_as_removable_options
+      @_acts_as_removable_options ||= {
+          column_name: 'removed_at'
+        }
+    end
+
+    # Delete where statements from query
+    def _removable_where_values(query, column_name, remove_where)
+      query = query.with_default_scope if query.respond_to?(:with_default_scope)
+      query.where_values.delete(remove_where)
+      query
+    end
   end
 end
 

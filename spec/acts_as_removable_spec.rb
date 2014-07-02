@@ -28,7 +28,7 @@ describe 'acts_as_removable' do
     db_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp', 'acts_as_removable.db'))
     Dir::mkdir(File.dirname(db_file)) unless File.exists?(File.dirname(db_file))
     ActiveRecord::Base.establish_connection(
-      :adapter => "sqlite3",
+      :adapter => 'sqlite3',
       :database => "#{File.expand_path(File.join(File.dirname(__FILE__), '..'))}/tmp/acts_as_removable.db"
     )
     ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS 'my_models'")
@@ -42,7 +42,7 @@ describe 'acts_as_removable' do
     end
   end
 
-  it "test column and check method" do
+  it 'test column and check method' do
     [[MyModel.create!, :removed_at], [MySecondModel.create!, :use_this_column]].each do |r, column_name|
       r.removed?.should be_false
       r.send(column_name).should be_nil
@@ -53,7 +53,7 @@ describe 'acts_as_removable' do
     end
   end
 
-  it "test scopes" do
+  it 'test scopes' do
     MyModel.delete_all
     MySecondModel.delete_all
 
@@ -73,7 +73,7 @@ describe 'acts_as_removable' do
     MySecondModel.unscoped.count.should be(2)
   end
 
-  it "test callbacks" do
+  it 'test callbacks' do
     r = MyModel.create!
     r.callback_before_remove.should be_false
     r.callback_after_remove.should be_false
@@ -93,6 +93,5 @@ describe 'acts_as_removable' do
     r.callback_after_remove.should be_true
     r.callback_before_unremove.should be_true
     r.callback_after_unremove.should be_true
-
   end
 end
