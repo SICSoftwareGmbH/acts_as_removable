@@ -37,10 +37,10 @@ class MyModel < ActiveRecord::Base
 end
 ```
 
-It's possible to skip the default_scope:
+It's possible to add a default scope with the active (not removed) records:
 ```ruby
 class MyModel < ActiveRecord::Base
-  acts_as_removable without_default_scope: true
+  acts_as_removable with_default_scope: true
 end
 ```
 

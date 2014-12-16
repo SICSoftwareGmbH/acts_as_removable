@@ -10,12 +10,12 @@ module ActsAsRemovable
     #
     #   acts_as_removable
     #   acts_as_removable column_name: 'other_column_name'
-    #   acts_as_removable without_default_scope: true
+    #   acts_as_removable with_default_scope: true
     #
     # ===== Options
     #
     # * <tt>:column_name</tt> - A symbol or string with the column to use for removal timestamp.
-    # * <tt>:without_default_scope</tt> - A boolean indicating to not set a default scope.
+    # * <tt>:with_default_scope</tt> - A boolean indicating to set a default scope with only active (not removed) records
     def acts_as_removable(options = {})
       _acts_as_removable_options.merge!(options)
 
@@ -31,7 +31,7 @@ module ActsAsRemovable
         _removable_where_values(query, removed_at_column_name, all.table[removed_at_column_name].not_eq(nil).to_sql)
       }
 
-      default_scope -> {where(all.table[_acts_as_removable_options[:column_name]].eq(nil).to_sql)} unless _acts_as_removable_options[:without_default_scope]
+      default_scope -> {where(all.table[_acts_as_removable_options[:column_name]].eq(nil).to_sql)} if _acts_as_removable_options[:with_default_scope]
 
       define_model_callbacks :remove, :unremove
 

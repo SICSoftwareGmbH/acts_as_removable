@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'acts_as_removable' do
   class MyModel < ActiveRecord::Base
-    acts_as_removable
+    acts_as_removable with_default_scope: true
     attr_accessor :callback_before_remove, :callback_after_remove, :callback_before_unremove, :callback_after_unremove
     before_remove do |r|
       r.callback_before_remove = true
@@ -20,7 +20,7 @@ describe 'acts_as_removable' do
   end
 
   class MySecondModel < ActiveRecord::Base
-    acts_as_removable column_name: :use_this_column, without_default_scope: true
+    acts_as_removable column_name: :use_this_column
   end
 
   before do
