@@ -37,42 +37,42 @@ module ActsAsRemovable
 
       class_eval do
         def self.before_remove(*args, &block)
-          set_callback :remove, :before, *args, &block
+          set_callback(:remove, :before, *args, &block)
         end
 
         def self.after_remove(*args, &block)
-          set_callback :remove, :after, *args, &block
+          set_callback(:remove, :after, *args, &block)
         end
 
         def self.before_unremove(*args, &block)
-          set_callback :unremove, :before, *args, &block
+          set_callback(:unremove, :before, *args, &block)
         end
 
         def self.after_unremove(*args, &block)
-          set_callback :unremove, :after, *args, &block
+          set_callback(:unremove, :after, *args, &block)
         end
 
         def removed?
           send(self.class._acts_as_removable_options[:column_name]).present?
         end
 
-        def remove(options={})
+        def remove(options = {})
           _update_remove_attribute(:remove, Time.now, false, options)
         end
 
-        def remove!(options={})
+        def remove!(options = {})
           _update_remove_attribute(:remove, Time.now, true, options)
         end
 
-        def unremove(options={})
+        def unremove(options = {})
           _update_remove_attribute(:unremove, nil, false, options)
         end
 
-        def unremove!(options={})
+        def unremove!(options = {})
           _update_remove_attribute(:unremove, nil, true, options)
         end
 
-        def _update_remove_attribute(callback, value, with_bang=false, options={})
+        def _update_remove_attribute(callback, value, with_bang = false, options = {})
           run_callbacks callback.to_sym do
             send("#{self.class._acts_as_removable_options[:column_name]}=", value)
             with_bang ? save!(options) : save(options)
