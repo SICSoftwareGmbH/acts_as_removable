@@ -73,9 +73,11 @@ module ActsAsRemovable
         end
 
         def _update_remove_attribute(callback, value, with_bang = false, options = {})
-          run_callbacks callback.to_sym do
-            send("#{self.class._acts_as_removable_options[:column_name]}=", value)
-            with_bang ? save!(options) : save(options)
+          self.class.transaction do
+            run_callbacks callback.to_sym do
+              send("#{self.class._acts_as_removable_options[:column_name]}=", value)
+              with_bang ? save!(options) : save(options)
+            end
           end
         end
       end
