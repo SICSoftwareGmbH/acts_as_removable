@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'acts_as_removable' do
   class MyModel < ActiveRecord::Base
-    acts_as_removable with_default_scope: true
+    acts_as_removable
     attr_accessor :callback_before_remove, :callback_after_remove, :callback_before_unremove, :callback_after_unremove
     before_remove do |r|
       r.callback_before_remove = true
@@ -62,7 +62,7 @@ describe 'acts_as_removable' do
     MySecondModel.create!
     MySecondModel.create!.remove!
 
-    expect(MyModel.count).to be(1)
+    expect(MyModel.count).to be(2)
     expect(MyModel.actives.count).to be(1)
     expect(MyModel.removed.count).to be(1)
     expect(MyModel.unscoped.count).to be(2)
