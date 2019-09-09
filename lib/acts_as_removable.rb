@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'active_support/concern'
 require 'active_record'
-require "acts_as_removable/version"
+require 'acts_as_removable/version'
 
 module ActsAsRemovable
   extend ActiveSupport::Concern
@@ -17,11 +19,11 @@ module ActsAsRemovable
     def acts_as_removable(options = {})
       _acts_as_removable_options.merge!(options)
 
-      scope :removed, -> {
+      scope :removed, lambda {
         where(all.table[_acts_as_removable_options[:column_name]].not_eq(nil).to_sql)
       }
 
-      scope :actives, -> {
+      scope :actives, lambda {
         where(all.table[_acts_as_removable_options[:column_name]].eq(nil).to_sql)
       }
 
@@ -76,9 +78,7 @@ module ActsAsRemovable
     end
 
     def _acts_as_removable_options
-      @_acts_as_removable_options ||= {
-          column_name: 'removed_at'
-        }
+      @_acts_as_removable_options ||= { column_name: 'removed_at' }
     end
   end
 end

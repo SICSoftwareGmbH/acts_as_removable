@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'acts_as_removable' do
@@ -26,10 +28,10 @@ describe 'acts_as_removable' do
   before do
     # setup database
     db_file = File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp', 'acts_as_removable.db'))
-    Dir::mkdir(File.dirname(db_file)) unless File.exists?(File.dirname(db_file))
+    Dir.mkdir(File.dirname(db_file)) unless File.exist?(File.dirname(db_file))
     ActiveRecord::Base.establish_connection(
-      :adapter => 'sqlite3',
-      :database => "#{File.expand_path(File.join(File.dirname(__FILE__), '..'))}/tmp/acts_as_removable.db"
+      adapter:  'sqlite3',
+      database: "#{File.expand_path(File.join(File.dirname(__FILE__), '..'))}/tmp/acts_as_removable.db"
     )
     ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS 'my_models'")
     ActiveRecord::Base.connection.create_table(:my_models) do |t|
