@@ -8,11 +8,15 @@ rvm:
   - 2.6.4
 
 gemfile:
-  - gemfiles/rails42
   - gemfiles/rails50
   - gemfiles/rails51
   - gemfiles/rails52
   - gemfiles/rails60
+
+matrix:
+  exclude:
+    - rvm: 2.4.7
+      gemfile: gemfiles/rails60
 
 script: bundle exec rake spec
 
