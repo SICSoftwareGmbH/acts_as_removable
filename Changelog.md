@@ -2,6 +2,7 @@ Changelog
 ===
 
 #### Unreleased
+* Fix support for Rails 6.0.X patch level releases
 
 #### 3.0.0 (2019-08-26)
 * Support for Rails 6.0.0
