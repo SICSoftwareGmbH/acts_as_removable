@@ -3,24 +3,21 @@ sudo: false
 language: ruby
 
 rvm:
-  - 2.4.10
   - 2.5.8
   - 2.6.6
   - 2.7.2
 
 gemfile:
-  - gemfiles/rails50
-  - gemfiles/rails51
   - gemfiles/rails52
   - gemfiles/rails60
   - gemfiles/rails61
 
 matrix:
   exclude:
-    - rvm: 2.4.10
-      gemfile: gemfiles/rails60
-    - rvm: 2.4.10
+    - rvm: 2.5.8
       gemfile: gemfiles/rails61
+    - rvm: 2.7.2
+      gemfile: gemfiles/rails52
 
 script: bundle exec rake spec
 
