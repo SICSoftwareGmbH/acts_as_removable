@@ -2,6 +2,7 @@ Changelog
 ===
 
 #### Unreleased
+* Add workaround for new argument handling in ruby 3
 
 #### 3.1.0 (2020-12-10)
 * Support for Rails 6.1.0

@@ -70,7 +70,13 @@ module ActsAsRemovable
           self.class.transaction do
             run_callbacks callback.to_sym do
               send("#{self.class._acts_as_removable_options[:column_name]}=", value)
-              with_bang ? save!(options) : save(options)
+
+              # workaround for new argument handling
+              if RUBY_VERSION.to_i < 3
+                with_bang ? save!(options) : save(options)
+              else
+                with_bang ? save!(**options) : save(**options)
+              end
             end
           end
         end
