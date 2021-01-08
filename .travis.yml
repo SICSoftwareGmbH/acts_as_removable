@@ -6,6 +6,7 @@ rvm:
   - 2.5.8
   - 2.6.6
   - 2.7.2
+  - 3.0.0
 
 gemfile:
   - gemfiles/rails52
@@ -17,6 +18,8 @@ matrix:
     - rvm: 2.5.8
       gemfile: gemfiles/rails61
     - rvm: 2.7.2
+      gemfile: gemfiles/rails52
+    - rvm: 3.0.0
       gemfile: gemfiles/rails52
 
 script: bundle exec rake spec
