@@ -6,6 +6,7 @@ Changelog
 * Update travis config
 * Require Ruby >= 2.6.0
 * Fix renamed rubocop cops
+* Update copyright year
 
 #### 3.1.1 (2021-01-08)
 * Add workaround for new argument handling in ruby 3
