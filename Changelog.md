@@ -2,8 +2,11 @@ Changelog
 ===
 
 #### Unreleased
+
+#### 3.2.0 (2021-12-16)
 * Support for Rails 7.0
-* Update travis config
+* (Update travis config) -> see below
+* Replace Travis CI with github actions
 * Require Ruby >= 2.6.0
 * Fix renamed rubocop cops
 * Update copyright year
