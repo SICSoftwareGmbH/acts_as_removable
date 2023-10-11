@@ -2,6 +2,11 @@ Changelog
 ===
 
 #### Unreleased
+* Support for Rails 7.1
+* Require Ruby >= 2.7.0
+* Require Rails >= 6.1
+* Test against Ruby 3.1 + 3.2
+* Update Actions config
 
 #### 3.2.0 (2021-12-16)
 * Support for Rails 7.0
