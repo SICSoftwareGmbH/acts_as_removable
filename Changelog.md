@@ -7,6 +7,7 @@ Changelog
 * Require Rails >= 6.1
 * Test against Ruby 3.1 + 3.2
 * Update Actions config
+* Update copyright year
 
 #### 3.2.0 (2021-12-16)
 * Support for Rails 7.0
