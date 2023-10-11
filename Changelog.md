@@ -2,6 +2,8 @@ Changelog
 ===
 
 #### Unreleased
+
+#### 3.3.0 (2023-10-11)
 * Support for Rails 7.1
 * Require Ruby >= 2.7.0
 * Require Rails >= 6.1
