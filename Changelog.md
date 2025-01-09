@@ -2,6 +2,9 @@ Changelog
 ===
 
 #### Unreleased
+* Support for Rails 7.2 & 8.0
+* Require Rails >= 7.1.0
+* Require Ruby >= 3.1.0
 * Update copyright year
 
 #### 3.3.0 (2023-10-11)
