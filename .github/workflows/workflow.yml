@@ -14,11 +14,9 @@ jobs:
           - rails80
         exclude:
           - ruby: 3.1
-            gemfile:
-              - rails80
+            gemfile: rails80
           - ruby: 3.2
-            gemfile:
-              - rails80
+            gemfile: rails80
 
     steps:
       - uses: actions/checkout@v4
