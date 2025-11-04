@@ -2,6 +2,8 @@ Changelog
 ===
 
 #### Unreleased
+
+#### 3.5.0 (2025-11-04)
 * Support for Rails 8.1
 * Require Rails >= 7.2.0
 * Require Ruby >= 3.2.0
