@@ -2,6 +2,10 @@ Changelog
 ===
 
 #### Unreleased
+* Support for Rails 8.1
+* Require Rails >= 7.2.0
+* Require Ruby >= 3.2.0
+* Fix specs using the wrong rails version as due to a wrong version annotation (x.y instead of x.y.z)
 
 #### 3.4.0 (2025-01-09)
 * Support for Rails 7.2 & 8.0
